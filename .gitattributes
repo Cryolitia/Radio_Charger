@@ -1,0 +1,6 @@
+Core/** linguist-vendored
+Debug/** linguist-vendored
+Ld/** linguist-vendored
+Peripheral/** linguist-vendored
+Startup/** linguist-vendored
+User/u8g2/** linguist-vendored

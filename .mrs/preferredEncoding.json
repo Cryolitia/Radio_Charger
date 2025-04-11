@@ -1,0 +1,20 @@
+{
+	"details": [
+		{
+			"file": "User/main.c",
+			"encoding": "utf8"
+		},
+		{
+			"file": "User/main.h",
+			"encoding": "utf8"
+		},
+		{
+			"file": "User/oled.c",
+			"encoding": "utf8"
+		},
+		{
+			"file": "User/epaper.c",
+			"encoding": "utf8"
+		}
+	]
+}
