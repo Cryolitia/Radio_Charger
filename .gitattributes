@@ -1,0 +1,9 @@
+Core/** linguist-generated
+Debug/** linguist-generated
+Peripheral/** linguist-generated
+User/u8g2/** linguist-vendored
+User/u8g2.h linguist-vendored
+User/u8x8.h linguist-vendored
+User/*ch32x035* linguist-generated
+User/PD_* linguist-vendored
+User/unifont.c linguist-generated
