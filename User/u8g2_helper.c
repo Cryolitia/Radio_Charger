@@ -64,20 +64,22 @@ void u8g2_draw_center_c (struct u8g2_helper_t *u8g2_helper, const char *str, int
 }
 
 void u8g2_draw_left (struct u8g2_helper_t *u8g2_helper, const char *str, int row, int column, int pos_row, int pos_column) {
+    u8g2_SetFontPosBaseline (&u8g2_helper->u8g2);
     float x_width = (u8g2_helper->pixel_x - 2 * u8g2_helper->padding_x - (row - 1) * u8g2_helper->gutter_x) / ((float)row);
-    float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height * 2) / ((float)(column - 1));
+    float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height) / ((float)(column - 1));
     float start_x = u8g2_helper->padding_x + x_width * pos_row + pos_row * u8g2_helper->gutter_x;
-    float start_y = u8g2_helper->padding_y + drv_prv.font_height * 2 * (pos_column + 1) + gutter_y * pos_column;
+    float start_y = u8g2_helper->padding_y + drv_prv.font_height * (pos_column + 1) + gutter_y * pos_column + u8g2_helper->moving_y;
 
     u8g2_DrawUTF8 (&u8g2_helper->u8g2, start_x, start_y, str);
 }
 
 void u8g2_draw_right (struct u8g2_helper_t *u8g2_helper, const char *str, int row, int column, int pos_row, int pos_column) {
+    u8g2_SetFontPosBaseline (&u8g2_helper->u8g2);
     int utf8_width = u8g2_GetUTF8Width (&u8g2_helper->u8g2, str);
     float x_width = (u8g2_helper->pixel_x - 2.0 * u8g2_helper->padding_x - (row - 1) * u8g2_helper->gutter_x) / ((float)row);
-    float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height * 2) / ((float)(column - 1));
+    float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height) / ((float)(column - 1));
     float start_x = u8g2_helper->padding_x + x_width * (pos_row + 1) + pos_row * u8g2_helper->gutter_x - utf8_width;
-    float start_y = u8g2_helper->padding_y + drv_prv.font_height * 2 * (pos_column + 1) + gutter_y * pos_column;
+    float start_y = u8g2_helper->padding_y + drv_prv.font_height * (pos_column + 1) + gutter_y * pos_column + u8g2_helper->moving_y;
 
     u8g2_DrawUTF8 (&u8g2_helper->u8g2, start_x, start_y, str);
 }
@@ -102,6 +104,7 @@ void u8g2_draw_center_c_x2 (struct u8g2_helper_t *u8g2_helper, const char *str, 
 }
 
 void u8g2_draw_left_x2 (struct u8g2_helper_t *u8g2_helper, const char *str, int row, int column, int pos_row, int pos_column) {
+    u8g2_SetFontPosBaseline (&u8g2_helper->u8g2);
     float x_width = (u8g2_helper->pixel_x - 2 * u8g2_helper->padding_x - (row - 1) * u8g2_helper->gutter_x) / ((float)row);
     float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height * 2) / ((float)(column - 1));
     float start_x = u8g2_helper->padding_x + x_width * pos_row + pos_row * u8g2_helper->gutter_x;
@@ -111,6 +114,7 @@ void u8g2_draw_left_x2 (struct u8g2_helper_t *u8g2_helper, const char *str, int 
 }
 
 void u8g2_draw_right_x2 (struct u8g2_helper_t *u8g2_helper, const char *str, int row, int column, int pos_row, int pos_column) {
+    u8g2_SetFontPosBaseline (&u8g2_helper->u8g2);
     int utf8_width = u8g2_GetUTF8Width (&u8g2_helper->u8g2, str - (row - 1) * u8g2_helper->gutter_x) * 2;
     float x_width = (u8g2_helper->pixel_x - 2.0 * u8g2_helper->padding_x) / ((float)row);
     float gutter_y = (u8g2_helper->pixel_y - 2.0 * u8g2_helper->padding_y - column * drv_prv.font_height * 2) / ((float)(column - 1));

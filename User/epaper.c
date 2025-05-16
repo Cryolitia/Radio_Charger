@@ -9,6 +9,7 @@ struct u8g2_helper_t u8g2_epaper = {
     EPAPER_PADDING_X,
     EPAPER_PADDING_Y,
     EPAPER_GUTTER_X,
+    EPAPER_MOVING_Y,
 };
 
 static u8x8_display_info_t u8x8_jd79661_250x122_noname_display_info =
@@ -240,33 +241,40 @@ void epaper_draw_main_page() {
     char buffer[20] = {0};
     Epaper_ClearBuffer (&u8g2_epaper);
 
+    u8g2_draw_left (&u8g2_epaper, "USB PD", 3, 4, 0, 0);
     if (!drv_prv.pd_status) {
-        u8g2_draw_left (&u8g2_epaper, "USB PD 未连接", 1, 3, 0, 0);
+        u8g2_draw_left (&u8g2_epaper, "未连接", 3, 4, 0, 2);
     } else {
-        u8g2_draw_left (&u8g2_epaper, "PD 已连接", 3, 3, 0, 0);
-
         sprintf (buffer, "%d V", drv_prv.pd_voltage / 1000);
-        u8g2_draw_right (&u8g2_epaper, buffer, 3, 3, 1, 0);
+        u8g2_draw_right (&u8g2_epaper, buffer, 3, 3, 0, 1);
 
         sprintf (buffer, "%d A", drv_prv.pd_current / 1000);
-        u8g2_draw_right (&u8g2_epaper, buffer, 3, 3, 2, 0);
+        u8g2_draw_right (&u8g2_epaper, buffer, 3, 3, 0, 2);
     }
 
-    u8g2_draw_left (&u8g2_epaper, "电压", 2, 3, 0, 1);
+    u8g2_draw_left (&u8g2_epaper, "输入", 3, 7, 1, 0);
+
+    u8g2_draw_left (&u8g2_epaper, "电压", 3, 7, 1, 1);
     sprintf (buffer, "%d.%02d V", (int)drv_prv.vbus, (int)(drv_prv.vbus * 100) % 100);
-    u8g2_draw_right (&u8g2_epaper, buffer, 2, 3, 0, 1);
+    u8g2_draw_right (&u8g2_epaper, buffer, 3, 7, 1, 2);
 
-    u8g2_draw_left (&u8g2_epaper, "电流", 2, 3, 1, 1);
+    u8g2_draw_left (&u8g2_epaper, "电流", 3, 7, 1, 3);
     sprintf (buffer, "%d mA", (int)(drv_prv.current + 0.5));
-    u8g2_draw_right (&u8g2_epaper, buffer, 2, 3, 1, 1);
+    u8g2_draw_right (&u8g2_epaper, buffer, 3, 7, 1, 4);
 
-    u8g2_draw_left (&u8g2_epaper, "温度", 2, 3, 0, 2);
-    sprintf (buffer, "%d.%d °C", (int)drv_prv.temperature, (int)(drv_prv.temperature * 10) % 10);
-    u8g2_draw_right (&u8g2_epaper, buffer, 2, 3, 0, 2);
-
-    u8g2_draw_left (&u8g2_epaper, "功率", 2, 3, 1, 2);
+    u8g2_draw_left (&u8g2_epaper, "功率", 3, 7, 1, 5);
     sprintf (buffer, "%d mW", (int)(drv_prv.power + 0.5));
-    u8g2_draw_right (&u8g2_epaper, buffer, 2, 3, 1, 2);
+    u8g2_draw_right (&u8g2_epaper, buffer, 3, 7, 1, 6);
+
+    u8g2_draw_left (&u8g2_epaper, "输出", 3, 7, 2, 0);
+
+    u8g2_draw_left (&u8g2_epaper, "温度", 3, 7, 2, 2);
+    sprintf (buffer, "%d.%d °C", (int)drv_prv.temperature, (int)(drv_prv.temperature * 10) % 10);
+    u8g2_draw_right (&u8g2_epaper, buffer, 3, 7, 2, 3);
+
+    u8g2_draw_left (&u8g2_epaper, "电压", 3, 7, 2, 5);
+    sprintf (buffer, "%d.%02d V", (int)drv_prv.vout_voltage, (int)(drv_prv.vout_voltage * 100) % 100);
+    u8g2_draw_right (&u8g2_epaper, buffer, 3, 7, 2, 6);
 
     EPD_Display (buf);
 }

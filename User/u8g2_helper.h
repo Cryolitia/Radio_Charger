@@ -13,6 +13,7 @@ struct u8g2_helper_t {
     int padding_x;
     int padding_y;
     int gutter_x;
+    int moving_y;
 };
 
 void u8g2_draw_center (struct u8g2_helper_t *u8g2_helper, const char *str);
