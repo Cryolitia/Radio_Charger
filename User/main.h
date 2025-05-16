@@ -11,22 +11,25 @@
 #include "epaper.h"
 #include "u8g2_helper.h"
 #include "unifont.h"
+#include "adc.h"
 
 #define DS18B20_ENABLE
-// #define I2C_OLED_ENABLE
+//#define I2C_OLED_ENABLE
 #define EPAPER_ENABLE
 #define INA226_ENABLE
 
 #define MAIN_THREAD_INTERVAL 1000
 
-#define OLED_PADDING_X 5
-#define OLED_PADDING_Y 5
+#define OLED_PADDING_X 0
+#define OLED_PADDING_Y 0
 #define OLED_GUTTER_X 0
+#define OLED_MOVING_Y 0
 
 #define EPAPER_FULL_REFRESH_INTERVAL 10
-#define EPAPER_PADDING_X 20
-#define EPAPER_PADDING_Y 20
-#define EPAPER_GUTTER_X 20
+#define EPAPER_PADDING_X 10
+#define EPAPER_PADDING_Y 10
+#define EPAPER_MOVING_Y 8
+#define EPAPER_GUTTER_X 10
 
 #define U8G2_FONT u8g2_font_unifont
 
@@ -42,6 +45,8 @@ struct driver_private_data {
     int power;
 
     float temperature;
+
+    float vout_voltage;
 };
 
 extern struct driver_private_data drv_prv;
@@ -64,5 +69,7 @@ void TIM3_IRQHandler (void) __attribute__ ((interrupt ("WCH-Interrupt-fast")));
 #define INA226_CURRENTLSB 0.25F  // mA/bit
 
 #define OLED_ADDRESS 0x78
+
+#define VOUT_ADC_DEVIDE 6.74
 
 #endif  // MAIN_HEADER

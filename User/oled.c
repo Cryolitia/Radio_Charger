@@ -11,6 +11,7 @@ struct u8g2_helper_t u8g2_oled = {
     OLED_PADDING_X,
     OLED_PADDING_Y,
     OLED_GUTTER_X,
+    OLED_MOVING_Y,
 };
 #endif
 
@@ -134,32 +135,42 @@ void i2c_oled_draw_main_page() {
     u8g2_ClearBuffer (&u8g2_oled.u8g2);
 
     if (!drv_prv.pd_status) {
-        u8g2_draw_left (&u8g2_oled, "USB PD N/A", 1, 3, 0, 0);
+        u8g2_draw_left (&u8g2_oled, "USB PD N/A", 1, 4, 0, 0);
     } else {
-        u8g2_draw_left (&u8g2_oled, "PD", 3, 3, 0, 0);
+        u8g2_draw_left (&u8g2_oled, "PD", 3, 4, 0, 0);
 
         sprintf (buffer, "%d V", drv_prv.pd_voltage / 1000);
-        u8g2_draw_right (&u8g2_oled, buffer, 3, 3, 1, 0);
+        u8g2_draw_right (&u8g2_oled, buffer, 3, 4, 1, 0);
 
         sprintf (buffer, "%d A", drv_prv.pd_current / 1000);
-        u8g2_draw_right (&u8g2_oled, buffer, 3, 3, 2, 0);
+        u8g2_draw_right (&u8g2_oled, buffer, 3, 4, 2, 0);
     }
 
-    // u8g2_draw_left(&u8g2_oled, "电压", 2, 3, 0, 1);
+    // u8g2_draw_left(&u8g2_oled, "电压", 2, 4, 0, 1);
     sprintf (buffer, "%d.%02d V", (int)drv_prv.vbus, (int)(drv_prv.vbus * 100) % 100);
-    u8g2_draw_right (&u8g2_oled, buffer, 2, 3, 0, 1);
+    u8g2_draw_right (&u8g2_oled, buffer, 2, 4, 0, 1);
 
-    // u8g2_draw_left(&u8g2_oled, "电流", 2, 3, 1, 1);
+    // u8g2_draw_left(&u8g2_oled, "电流", 2, 4, 1, 1);
     sprintf (buffer, "%d mA", (int)(drv_prv.current + 0.5));
-    u8g2_draw_right (&u8g2_oled, buffer, 2, 3, 1, 1);
+    u8g2_draw_right (&u8g2_oled, buffer, 2, 4, 1, 1);
 
-    // u8g2_draw_left(&u8g2_oled, "温度", 2, 3, 0, 2);
+    // u8g2_draw_left(&u8g2_oled, "功率", 2, 4, 1, 2);
+    // + 0.5: 四舍五入到整数
+    int power = drv_prv.power + 0.5;
+    if (power > 10000) {
+        sprintf (buffer, "%d W", (int)(power / 1000.0 + 0.5));
+    } else {
+        sprintf (buffer, "%d mW", power);
+    }
+    u8g2_draw_right (&u8g2_oled, buffer, 2, 4, 1, 2);
+
+    // u8g2_draw_left(&u8g2_oled, "电压", 2, 4, 0, 3);
+    sprintf (buffer, "%d.%02d V", (int)drv_prv.vout_voltage, (int)(drv_prv.vout_voltage * 100) % 100);
+    u8g2_draw_right (&u8g2_oled, buffer, 2, 4, 0, 3);
+
+    // u8g2_draw_left(&u8g2_oled, "温度", 2, 4, 1, 3);
     sprintf (buffer, "%d.%d °C", (int)drv_prv.temperature, (int)(drv_prv.temperature * 10) % 10);
-    u8g2_draw_right (&u8g2_oled, buffer, 2, 3, 0, 2);
-
-    // u8g2_draw_left(&u8g2_oled, "功率", 2, 3, 1, 2);
-    sprintf (buffer, "%d mW", (int)(drv_prv.power + 0.5));
-    u8g2_draw_right (&u8g2_oled, buffer, 2, 3, 1, 2);
+    u8g2_draw_right (&u8g2_oled, buffer, 2, 4, 1, 3);
 
     u8g2_SendBuffer (&u8g2_oled.u8g2);
 }

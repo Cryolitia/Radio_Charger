@@ -122,11 +122,12 @@ int main (void) {
     printf ("ChipID:%08x\n", DBGMCU_GetCHIPID());
     printf ("PD SNK TEST\n");
 
+    PD_Init();
+
 #ifdef DS18B20_ENABLE
     DS18B20_Init();
 #endif
     IIC_Init();
-    PD_Init();
 #ifdef INA226_ENABLE
     INA226_INIT (INA226_MODE_TRIG_SHUNT_AND_BUS | INA226_VSH_8244uS | INA226_VBUS_8244uS | INA226_AVG_4);
 #endif
@@ -137,6 +138,9 @@ int main (void) {
     Epaper_Init();
 #endif
 
+    ADC_Function_Init();
+    ADC_SoftwareStartConvCmd (ADC1, ENABLE);
+
     TIM1_Init (999, 48 - 1);
     TIM3_Init (99, 12000 - 1);
 
@@ -146,8 +150,8 @@ int main (void) {
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init (GPIOA, &GPIO_InitStructure);
-    //GPIO_ResetBits (GPIOA, GPIO_Pin_17);
-    GPIO_SetBits(GPIOA, GPIO_Pin_17);
+    // GPIO_ResetBits (GPIOA, GPIO_Pin_17);
+    GPIO_SetBits (GPIOA, GPIO_Pin_17);
 
     while (1) {
         /* Get the calculated timing interval value */
@@ -176,6 +180,7 @@ int main (void) {
             // INA226
             INA226_START();
 #endif
+            ADC_SoftwareStartConvCmd (ADC1, ENABLE);
 
             // Delay 100ms
             TIM_Cmd (TIM3, ENABLE);
@@ -229,6 +234,9 @@ void TIM3_IRQHandler (void) {
         if (drv_prv.vbus < 4.5) {
             drv_prv.pd_status = 0;
         }
+
+        drv_prv.vout_voltage = get_output_voltage();
+        printf ("output voltage: %d.%02d\n", (int)drv_prv.vout_voltage, (int)(drv_prv.vout_voltage * 100) % 100);
 
 #ifdef I2C_OLED_ENABLE
         i2c_oled_draw_main_page();
